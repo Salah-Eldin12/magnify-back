@@ -103,21 +103,21 @@ function SendEmail(req, res, next) {
       },
     ],
   };
-
-  transporter.sendMail(mailOptions, (err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Failed to send email", error: err.message });
-    }
-    if (routes.includes(req.body.emailType)) {
-      return res
-        .status(200)
-        .json({ message: "email send", verifyLink: req.verifyLink });
-    } else {
-      next();
-    }
-  });
+  try {
+    transporter.sendMail(mailOptions, (err) => {
+      if (routes.includes(req.body.emailType)) {
+        return res
+          .status(200)
+          .json({ message: "email send", verifyLink: req.verifyLink });
+      } else {
+        next();
+      }
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Failed to send email", error: error });
+  }
 }
 
 module.exports = { SendEmail };
