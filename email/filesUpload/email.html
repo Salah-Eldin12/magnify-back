@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: "Montserrat", system-ui;
+      height: 100dvh;
+    }
+
+    #container {
+      margin: 0px;
+      height: 100%;
+    }
+
+
+    #text>*,
+    #logo {
+      margin: 25px auto;
+    }
+
+    #text {
+      margin-top: 30px;
+      width: 100%;
+      padding: 0px 25px;
+      text-align: center;
+    }
+
+    #heading {
+      text-align: center;
+      font-weight: 700;
+      color: #497B62;
+      font-size: 28px;
+    }
+
+    #welcome {
+      text-align: center;
+      font-weight: 400;
+      color: #497B62;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    #welcome h2 {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 419px) {
+
+      #text img {
+        width: 120px;
+      }
+
+      #text #heading {
+        font-size: 20px;
+      }
+
+      #text #welcome h2 {
+        font-size: 18px;
+      }
+
+    }
+
+    @media (min-width: 420px) and (max-width: 600px) {
+
+      #text img {
+        width: 160px;
+      }
+
+      #text #heading {
+        font-size: 25px;
+      }
+
+      #text #welcome h2 {
+        font-size: 20px;
+      }
+    }
+
+
+    @media (min-width: 601px) and (max-width: 769px) {
+
+      #text img {
+        width: 200px;
+      }
+
+      #text #heading {
+        font-size: 30px;
+      }
+
+      #text #welcome h2 {
+        font-size: 23px;
+      }
+
+    }
+
+    @media (min-width: 770px) and (max-width: 1024px) {}
+  </style>
+</head>
+
+<body>
+  <main id="container">
+    <img src="cid:icon" width="100%">
+    <div id="text">
+      <img src="cid:logo" width="220" id="logo">
+      <h1 id="heading">New Uploaded Files </h1>
+      <h2 style="margin-bottom:0px; font-size:22px; text-transform:capitalize; color:#65957f;">Hello, Mr.Ashraf</h2>
+      <div id="welcome">
+        <h3 style="margin-bottom:0px; font-size:18px; color:#65957f;">This email is alert that there are files uploaded
+          to the server</h3>
+        <h3 style="font-size:16px; text-transform:capitalize; color:#65957f;">the project uploaded with name
+          <span style="text-transform:capitalize">{{projectName}}</span>
+          in {{folderName}} folder
+        </h3>
+      </div>
+  </main>
+</body>
+
+</html>

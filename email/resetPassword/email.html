@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: "Montserrat", system-ui;
+    }
+
+    #container {
+      margin: 0px;
+      height: fit-content;
+    }
+
+    #text img,
+    #text #welcome,
+    #link,
+    #logo {
+      margin: 30px auto;
+    }
+
+    #text {
+      height: 100%;
+      width: 100%;
+      padding: 0px 25px;
+      text-align: center;
+    }
+
+    #heading {
+      text-align: center;
+      font-weight: 700;
+      color: #497B62;
+      font-size: 25px;
+    }
+
+    #welcome {
+      text-align: center;
+      font-weight: 400;
+      color: #497B62;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    #welcome h2 {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    #welcome p {
+      font-size: 20px;
+      line-height: 1.5;
+      width: 80%;
+      margin: auto;
+    }
+
+    #link {
+      text-decoration: none;
+      font-weight: 400;
+      color: #D2ECDF;
+      font-size: 18px;
+      text-align: center;
+      line-height: 40px;
+      padding: 5px 100px;
+      border-radius: 45px;
+      background-color: #497B62;
+      display: block;
+      width: fit-content;
+      margin: 30px auto 10px auto;
+    }
+
+    #links {
+      margin-top: 30px;
+    }
+
+    #expire-alert {
+      color: #497B62;
+      font-size: 17px;
+    }
+
+    #links>a {
+      text-align: center;
+      text-decoration: none;
+      font-weight: 400;
+      color: #497B62;
+      font-size: 16px;
+      text-align: center;
+      line-height: 40px;
+      margin: 0px 60px;
+    }
+
+    @media (max-width: 419px) {
+
+      #text img,
+      #text #welcome,
+      #link,
+      #logo {
+        margin: 25px auto;
+      }
+
+      #text img {
+        width: 120px;
+      }
+
+      #text #heading {
+        font-size: 20px;
+      }
+
+      #text #welcome h2 {
+        font-size: 18px;
+      }
+
+      #text #welcome p {
+        font-size: 14px !important;
+        text-align: center;
+        line-height: 23px;
+        width: 100%;
+
+      }
+
+      #text #link {
+        font-size: 16px !important;
+        padding: 2px 3em;
+      }
+
+      #text #links>a {
+        font-size: 13px;
+        margin: 0px 10px;
+      }
+    }
+
+    @media (min-width: 420px) and (max-width: 600px) {
+
+      #text img,
+      #text #welcome,
+      #link,
+      #logo {
+        margin: 25px auto;
+      }
+
+      #text img {
+        width: 160px;
+      }
+
+      #text #heading {
+        font-size: 25px;
+      }
+
+      #text #welcome h2 {
+        font-size: 20px;
+      }
+
+      #text #welcome p {
+        font-size: 16px !important;
+        text-align: center;
+        line-height: 23px;
+        width: 95%;
+      }
+
+      #text #link {
+        font-size: 16px !important;
+        padding: 5px 4em;
+      }
+
+      #text #links>a {
+        font-size: 13px;
+        margin: 0px 30px;
+      }
+
+    }
+
+
+    @media (min-width: 601px) and (max-width: 769px) {
+
+      #text img,
+      #text #welcome,
+      #link,
+      #logo {
+        margin: 35px auto;
+      }
+
+      #text img {
+        width: 200px;
+      }
+
+      #text #heading {
+        font-size: 30px;
+      }
+
+      #text #welcome h2 {
+        font-size: 23px;
+      }
+
+      #text #welcome p {
+        font-size: 17px !important;
+        text-align: center;
+        line-height: 23px;
+        width: 90%;
+      }
+
+      #text #link {
+        font-size: 16px !important;
+        padding: 5px 7rem;
+      }
+
+      #text #links>a {
+        font-size: 16px;
+        margin: 0px 50px;
+      }
+    }
+
+    @media (min-width: 770px) and (max-width: 1024px) {
+      #welcome p {
+        font-size: 19px;
+        width: 85%;
+        margin: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="container">
+    <img src="cid:icon" width="100%">
+    <div id="text">
+      <img src="cid:logo" width="220" id="logo">
+      <h1 id="heading">Reset password</h1>
+      <div id="welcome">
+        <h2>Hello, {{name}} </h2>
+        <p>
+          You recently requested a new password
+          Please click link below to complete your new password request
+        </p>
+      </div>
+      <div>
+        <a href={{passToken}} id="link">Reset password</a>
+        <p id="expire-alert">This link will expire after 10 minute</p>
+      </div>
+      <div id="links">
+        <a href="">Thanks, magnify</a>
+        <a href="https://magnify-vt.com/contact/">Need help? <b>Contact us</b></a>
+        <a href="https://magnify-vt.com/privacy-policy/"><b>Privcy police</b></a>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

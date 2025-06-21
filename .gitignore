@@ -1,0 +1,11 @@
+node_modules
+.env
+EndPoints.txt
+images
+missing_photo
+photo_session_data
+dist 
+.gitconfig
+.local/
+.npm/
+.pm2/
