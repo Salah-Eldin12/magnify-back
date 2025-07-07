@@ -10,7 +10,7 @@ const { VerifyTokenAdmin } = require("../../middleware/verifyToken");
 const router = express.Router();
 
 // create user
-router.post("/create-user", VerifyTokenAdmin, createUser);
+router.post("/create-user", createUser);
 
 // user login
 router.post("/email-login", loginWithEmail);

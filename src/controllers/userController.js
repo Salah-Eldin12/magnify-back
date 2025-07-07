@@ -82,7 +82,9 @@ const getUser = asyncHandler(async (req, res) => {
 
   // Fetch the user excluding sensitive fields
   let user = await UserSc.findById(verifyToken.id)
-    .select("-password -createdAt -__v -updatedAt -verifyLink -otp -phone -verified")
+    .select(
+      "-password -createdAt -__v -updatedAt -verifyLink -otp -phone -verified"
+    )
     .populate("projectsData");
 
   // Exclude sensitive fields in the response

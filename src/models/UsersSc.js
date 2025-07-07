@@ -83,6 +83,7 @@ const userValidate = {
   }),
   phone: joi.number().integer(),
   projectsData: joi.array().items(),
+  isAdmin: joi.boolean(),
 };
 
 const ValidateCreateUser = (obj) => {

@@ -1,11 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/ConnectDB");
-require("dotenv").config();
 const app = express();
 const getReport = require("./src/controllers/ReportExport");
 const path = require("path");
+const { IframeAllowedHosts } = require("./middleware/IframeAllowedHosts");
+
 // Connect to the database
+require("dotenv").config();
 connectDB();
 
 // Middleware
@@ -13,26 +15,21 @@ app.use(express.json({ extended: true, limit: "10gb" }));
 app.use(express.urlencoded({ extended: true, limit: "10gb" }));
 app.use(
   cors({
-    origin: [
-      "https://www.magnifyportal.com",
-      "https://magnifyportal.com",
-      "http://localhost:5173",
-      "http://api.magnifyportal.com",
-    ],
+    origin: process.env.ALLOWED_IFRAME_HOSTS.split(","),
     credentials: true,
     methods: "GET, POST, DELETE, PUT",
     allowedHeaders:
       "Content-Type, Authorization, token, isOwner, user, Access-Control-Allow-Origin,lang",
   })
 );
+app.use("/api/public/*", IframeAllowedHosts);
 
 app.use(
   "/api/public",
   express.static(path.join(__dirname, "public"), { maxAge: "1y" })
-); // Cache images for 1 year
+);
 
 // Routes
-
 app.get("/", (req, res) => {
   res.status(200).send("Hello World! Magnify Portal API is running.");
 });

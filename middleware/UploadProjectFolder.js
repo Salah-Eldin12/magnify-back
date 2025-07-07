@@ -4,13 +4,7 @@ const fs = require("fs");
 const { ProjectSc } = require("../src/models/ProjectSc");
 
 // get the project folder name
-const uploadFolder = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "var/" + "www/" + "magnify/" + "client/" + "projects/"
-);
+const uploadFolder = path.join(__dirname, process.env.UPLOAD_PROJECTS_PATH);
 // allowed types
 const allowedTypes = ["application/zip", "application/x-zip-compressed"];
 // storage for Missing Data
@@ -37,10 +31,12 @@ const UploadProjectStorage = multer.diskStorage({
     const projectName = project.name;
     const projectDate = req.query.date;
     const newFolder = path.join(
+    
       uploadFolder,
       projectOwner,
       projectName,
-      projectDate ? projectDate : ""
+      projectDate ? projectDate : "",
+      "/"
     );
 
     if (fs.existsSync(newFolder)) fs.rmSync(newFolder, { recursive: true });

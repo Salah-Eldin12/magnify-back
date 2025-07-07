@@ -73,16 +73,9 @@ const getProjectFolder = asyncHandler(async (req, res) => {
   const mainFolder = path.join(
     __dirname,
     "..",
-    "..",
-    "..",
-    "..",
-    "var/" +
-      "www/" +
-      "magnify/" +
-      "client/" +
-      "projects/" +
-      req.params.folder.replaceAll("|", "/")
+    process.env.UPLOAD_PROJECTS_PATH + req.params.folder.replaceAll("|", "/")
   );
+
   const folderExist = fs.existsSync(mainFolder);
   if (folderExist) {
     res.status(200).send("folder exist");
