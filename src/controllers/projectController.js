@@ -70,11 +70,16 @@ const getProjectByName = asyncHandler(async (req, res) => {
  * @access public
  */
 const getProjectFolder = asyncHandler(async (req, res) => {
-  const mainFolder = path.join(
-    __dirname,
-    "../",
-    process.env.UPLOAD_PROJECTS_PATH + req.params.folder.replaceAll("|", "/")
-  );
+  const mainFolder = path
+    .join(
+      __dirname,
+      "..",
+      process.env.UPLOAD_PROJECTS_PATH + "/" + req.params.folder
+    )
+    .replaceAll("|", "/");
+
+    
+  console.log("mainFolder", mainFolder);
 
   const folderExist = fs.existsSync(mainFolder);
   if (folderExist) {
