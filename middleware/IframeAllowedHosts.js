@@ -9,8 +9,6 @@ function IframeAllowedHosts(req, res, next) {
     baseUrl + req.originalUrl.split("/").slice(0, -1).join("/");
   res.setHeader("Cache-Control", "no-store");
 
-  console.log(req.originalUrl);
-
   if (allowedHosts.some((host) => referer.startsWith(host))) {
     return next();
   }
