@@ -78,7 +78,6 @@ const getProjectFolder = asyncHandler(async (req, res) => {
     )
     .replaceAll("|", "/");
 
-  console.log("mainFolder", mainFolder);
 
   const folderExist = fs.existsSync(mainFolder);
   if (folderExist) {
