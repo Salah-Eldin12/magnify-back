@@ -4,7 +4,6 @@ const connectDB = require("./config/ConnectDB");
 const app = express();
 const getReport = require("./src/controllers/ReportExport");
 const path = require("path");
-const { IframeAllowedHosts } = require("./middleware/IframeAllowedHosts");
 
 // Connect to the database
 require("dotenv").config();
@@ -22,7 +21,6 @@ app.use(
       "Content-Type, Authorization, token, isOwner, user, Access-Control-Allow-Origin,lang",
   })
 );
-app.use("/api/public/*", IframeAllowedHosts);
 
 app.use(
   "/api/public",
