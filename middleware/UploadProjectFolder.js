@@ -13,11 +13,13 @@ const UploadProjectStorage = multer.diskStorage({
     const projectID = req.params.id;
     const project = await ProjectSc.findById(projectID).populate("owner");
     const ToEmail = project.owner.email;
+    // send email to admin & user that the project uploaded
     if (project.accessUser.length >= 1) {
       const CcEmails = project.accessUser.map((user) => user.email);
       req.CcEmails = CcEmails;
     }
-    req.ToEmail = ToEmail;
+
+    // check if the project date is exist or not
     if (req.query.date) {
       const DateExsit = project.subDate.find(
         (date) => new Date(date).toISOString().split("T")[0] === req.query.date
@@ -31,24 +33,27 @@ const UploadProjectStorage = multer.diskStorage({
     const projectName = project.name;
     const projectDate = req.query.date;
     const newFolder = path.join(
-    
       uploadFolder,
       projectOwner,
       projectName,
-      projectDate ? projectDate : "",
-      "/"
+      projectDate ? projectDate : ""
     );
+
+    req.ToEmail = ToEmail;
+    req.userName = projectOwner;
+    req.projectName = projectName;
+    req.projectDate = projectDate ? projectDate : "";
 
     if (fs.existsSync(newFolder)) fs.rmSync(newFolder, { recursive: true });
 
     fs.mkdirSync(newFolder, { recursive: true });
 
-    cb(null, newFolder);
+    return cb(null, newFolder);
   },
 
   filename: (req, file, cb) => {
     const filname = `${file.originalname}`;
-    cb(null, filname);
+    return cb(null, filname);
   },
 });
 

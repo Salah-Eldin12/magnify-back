@@ -18,7 +18,6 @@ const { SendEmail } = require("../../middleware/SendEmail");
 
 const router = express.Router();
 
-//////////////////////// Need Auth routes ////////////////////////
 // create project
 router.post("/:projectOwner", VerifyTokenAdmin, createProject);
 //  get all projects
@@ -32,7 +31,7 @@ router.post(
   "/upload-folder/:id",
   VerifyTokenAdmin,
   UploadProject.single("project-folder"),
-  // SendEmail,
+  SendEmail,
   UploadFolder
 );
 // add and delete project access users

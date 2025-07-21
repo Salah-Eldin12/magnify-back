@@ -24,6 +24,12 @@ function SendEmail(req, res, next) {
       cc: [req.CcEmails && req.CcEmails],
       emailFile: "uploadProjectFiles",
       subject: "Project Files Uploaded",
+      replacement: {
+        name: req.userName,
+        link: `${process.env.WEBSITE_URL}`,
+        projectName: req.projectName,
+        projectDate: req.projectDate,
+      },
     },
     {
       emailType: "filesUpload",
@@ -60,7 +66,7 @@ function SendEmail(req, res, next) {
   ];
 
   const emailOption = EmailsOptions.find(
-    (emailType) => emailType.emailType === req.body.emailType
+    (email) => email.emailType === req.body.emailType
   );
 
   if (!emailOption) {

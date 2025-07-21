@@ -19,7 +19,7 @@ const getProjects = asyncHandler(async (req, res) => {
  * @desc get all projects
  * @route /api/project/last-added
  * @method GET
- * @access public
+ * @access private only admin
  */
 const getLastAddedProjects = asyncHandler(async (req, res) => {
   const projects = await ProjectSc.find().sort({ _id: -1 }).limit(10);
@@ -44,7 +44,7 @@ const getProject = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc get project by id
+ * @desc get project by name
  * @route /api/project/projectName/:projectName
  * @method GET
  * @access public
@@ -67,7 +67,7 @@ const getProjectByName = asyncHandler(async (req, res) => {
  * @desc get project folder
  * @route /api/project/project-folder/:folder
  * @method GET
- * @access public
+ * @access private only admin
  */
 const getProjectFolder = asyncHandler(async (req, res) => {
   const mainFolder = path
@@ -77,7 +77,6 @@ const getProjectFolder = asyncHandler(async (req, res) => {
       process.env.UPLOAD_PROJECTS_PATH + "/" + req.params.folder
     )
     .replaceAll("|", "/");
-
 
   const folderExist = fs.existsSync(mainFolder);
   if (folderExist) {
@@ -91,7 +90,7 @@ const getProjectFolder = asyncHandler(async (req, res) => {
  * @desc create project
  * @route /api/project/:projectOwner
  * @method POST
- * @access public
+ * @access private only admin
  */
 const createProject = asyncHandler(async (req, res) => {
   const userID = req.params.projectOwner;
@@ -117,7 +116,7 @@ const createProject = asyncHandler(async (req, res) => {
  * @desc update project
  * @route /api/project/:id
  * @method PUT
- * @access public
+ * @access private only admin
  */
 const updateProject = asyncHandler(async (req, res) => {
   const { status } = req.body;
@@ -179,10 +178,10 @@ const updateProject = asyncHandler(async (req, res) => {
   });
 });
 /**
- * @desc update project
+ * @desc upload project files
  * @route /api/project/upload-folder/:id
  * @method POST
- * @access public
+ * @access private only admin
  */
 const UploadFolder = asyncHandler(async (req, res) => {
   if (!req.file) {
@@ -205,7 +204,7 @@ const UploadFolder = asyncHandler(async (req, res) => {
  * @desc add access to project
  * @route /api/project/add-access/:id
  * @method PUT
- * @access public
+ * @access private only admin
  */
 const addAccess = asyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -257,10 +256,10 @@ const addAccess = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc add access to project
- * @route /api/project/add-access/:id
+ * @desc delet access to project
+ * @route /api/project/delete-access/:id
  * @method PUT
- * @access public
+ * @access private only admin
  */
 const deleteAccess = asyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -312,7 +311,7 @@ const deleteAccess = asyncHandler(async (req, res) => {
  * @desc delete project
  * @route /api/project/:id
  * @method DELETE
- * @access public
+ * @access private only admin
  */
 const deleteProject = asyncHandler(async (req, res) => {
   const { id } = req.params; // Project ID

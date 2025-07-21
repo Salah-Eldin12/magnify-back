@@ -59,7 +59,7 @@ router.post(
         $set: {
           img: {
             name: file.filename,
-            path: `${process.env.WEBSITE_URL_API_IMAGES_PATH}${file.filename}`,
+            path: `${process.env.SERVER_IMAGES_PATH}${file.filename}`,
           },
         },
       },

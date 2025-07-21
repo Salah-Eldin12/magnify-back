@@ -15,24 +15,32 @@ const { ProjectSc } = require("../models/ProjectSc");
  * @access public
  */
 const getUsers = asyncHandler(async (req, res) => {
-  const { page = 0 } = req.query;
-
   const usersSearch = await UserSc.find({ isAdmin: { $ne: true } })
     .sort({ fname: 1 })
     .populate("projectsData")
     .select("-password -createdAt -__v -updatedAt -verifyLink ");
 
-  const users = await UserSc.find({ isAdmin: { $ne: true } }, null, {
-    skip: parseInt(page) * 50,
-    limit: 50,
-  })
+  // user pagination
+  const page = parseInt(req.query.page) || 1; // الصفحة الحالية
+  const limit = parseInt(req.query.limit) || 50; // عدد العناصر لكل صفحة
+  const skip = (page - 1) * limit;
+  const totalUsers = await UserSc.countDocuments({ isAdmin: { $ne: true } });
+  const users = await UserSc.find({ isAdmin: { $ne: true } })
+    .skip(skip)
+    .limit(limit)
     .sort({ fname: 1 })
-    .populate("projectsData");
+    .populate("projectsData")
+    .select("-password -createdAt -__v -updatedAt -verifyLink ");
+
+  const totalPages = Math.ceil(totalUsers / limit);
+  const next = page < totalPages ? page + 1 : null;
+  const prev = page > 1 ? page - 1 : null;
 
   if (!users || users.length === 0) {
     return res.status(404).json({ message: "No users found" });
   }
-  res.status(200).json({ users, next: users.length > 49, usersSearch });
+
+  res.status(200).json({ users, next, prev, totalPages, page, usersSearch });
 });
 
 /**
@@ -207,7 +215,7 @@ const updateUser = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  res.send({ user });
+  res.send({ user, message: getText("Data Saved", "تم حفظ التعديلات ") });
 });
 
 /**

@@ -86,7 +86,7 @@ const loginWithEmail = asyncHandler(async (req, res) => {
   // email checker
   let user = await UserSc.findOne({ email });
   if (!user) {
-    return res.status(400).json({
+    return res.status(404).json({
       message: getText("Email not registered", "البريد الالكتروني غير مسجل"),
     });
   }

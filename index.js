@@ -36,6 +36,7 @@ app.use("/api/upload-files", require("./src/routes/uploadFiles"));
 app.use("/api/auth", require("./src/routes/auth"));
 app.use("/api/user", require("./src/routes/user"));
 app.use("/api/project", require("./src/routes/project"));
+app.use("/api/pilot_project", require("./src/routes/pilotProject"));
 app.use("/api/send-mail", require("./src/routes/sendMails"));
 app.use("/api/upload-project-img", require("./src/routes/ProjectImg"));
 
