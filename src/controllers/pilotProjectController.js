@@ -69,7 +69,9 @@ const getPilotProject = asyncHandler(async (req, res) => {
   if (!project) {
     return res.status(404).send("No project found with this name");
   }
-  return res.status(200);
+  return res
+    .status(200)
+    .send({ message: `project ${name} is loaded successfully` });
 });
 
 /**
