@@ -25,7 +25,6 @@ function SendEmail(req, res, next) {
       emailFile: "uploadProjectFiles",
       subject: "Project Files Uploaded",
       replacement: {
-        name: req.userName,
         link: `${process.env.WEBSITE_URL}`,
         projectName: req.projectName,
         projectDate: req.projectDate,
