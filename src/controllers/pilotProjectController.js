@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename);
 const public_project_folder = path.join(
   __dirname,
   "..",
-  "..",
   env.UPLOAD_PROJECTS_PATH
 );
 
