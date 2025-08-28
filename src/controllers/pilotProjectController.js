@@ -11,8 +11,10 @@ const __dirname = path.dirname(__filename);
 const public_project_folder = path.join(
   __dirname,
   "..",
+  "..",
   env.UPLOAD_PROJECTS_PATH
 );
+
 const pilot_project_path = path.join(public_project_folder, "pilot_projects");
 
 if (!fs.existsSync(pilot_project_path)) {
