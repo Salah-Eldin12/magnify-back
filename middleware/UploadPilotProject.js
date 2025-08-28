@@ -2,13 +2,12 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-
+import env from "../config/env";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-const uploadFolder = path.join(__dirname,"..", 'public/projects');
+const uploadFolder = path.join(__dirname, env.UPLOAD_PROJECTS_PATH);
 const allowedTypes = ["application/zip", "application/x-zip-compressed"];
 
 const PilotProjectStorage = multer.diskStorage({

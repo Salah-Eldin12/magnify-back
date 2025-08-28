@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // get the project folder name
-const uploadFolder = path.join(__dirname, "..", env.UPLOAD_PROJECTS_PATH);
+const uploadFolder = path.join(__dirname, env.UPLOAD_PROJECTS_PATH);
 // allowed types
 const allowedTypes = ["application/zip", "application/x-zip-compressed"];
 // storage for Missing Data
