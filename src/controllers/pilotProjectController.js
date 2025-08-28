@@ -3,6 +3,7 @@ import extract from "extract-zip";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import env from "../../config/env";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,8 +11,7 @@ const __dirname = path.dirname(__filename);
 const public_project_folder = path.join(
   __dirname,
   "..",
-  "..",
-  "public/projects"
+  env.UPLOAD_PROJECTS_PATH
 );
 const pilot_project_path = path.join(public_project_folder, "pilot_projects");
 
