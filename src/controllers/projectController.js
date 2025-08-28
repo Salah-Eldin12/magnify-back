@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const projectsFolder = path.join(__dirname, "..", env.UPLOAD_PROJECTS_PATH);
 /**
  * @desc get all projects
  * @route /api/project/
@@ -76,7 +77,7 @@ const getProjectByName = asyncHandler(async (req, res) => {
  */
 const getProjectFolder = asyncHandler(async (req, res) => {
   const mainFolder = path
-    .join(__dirname, "..", "..", "public/projects/" + req.params.folder)
+    .join(projectsFolder + req.params.folder)
     .replaceAll("|", "\\");
 
   const folderExist = fs.existsSync(mainFolder);

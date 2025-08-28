@@ -3,12 +3,13 @@ import path from "path";
 import fs from "fs";
 import { ProjectSc } from "../src/models/ProjectSc.js";
 import { fileURLToPath } from "url";
+import env from "../config/env.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // get the project folder name
-const uploadFolder = path.join(__dirname, '..','public/projects');
+const uploadFolder = path.join(__dirname, "..", env.UPLOAD_PROJECTS_PATH);
 // allowed types
 const allowedTypes = ["application/zip", "application/x-zip-compressed"];
 // storage for Missing Data
