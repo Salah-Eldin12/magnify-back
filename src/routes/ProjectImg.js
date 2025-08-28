@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
+import multer from "multer";
+import { VerifyTokenAdmin } from "../../middleware/verifyToken.js";
+import asyncHandler from "express-async-handler";
+import { ProjectSc } from "../models/ProjectSc.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
 const router = express.Router();
-const multer = require("multer");
-const { VerifyTokenAdmin } = require("../../middleware/verifyToken");
-const asyncHandler = require("express-async-handler");
-const { ProjectSc } = require("../models/ProjectSc");
-const path = require("path");
-const fs = require("fs");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-const uploadFolder = path.join(__dirname, "..", "..", "public", "images"); // Move up one directory from the current folder
+const uploadFolder = path.join(__dirname, "..", "..", "public/images", );
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
 }
@@ -51,7 +56,7 @@ router.post(
     const file = req.file;
 
     if (!file) {
-      res.status(400).send({ message: "no file choose" });
+      return res.status(400).send({ message: "no file choose" });
     }
     const project = await ProjectSc.findByIdAndUpdate(
       req.params.id,
@@ -73,4 +78,4 @@ router.post(
   })
 );
 
-module.exports = router;
+export default router;

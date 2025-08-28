@@ -1,8 +1,9 @@
-const express = require("express");
-const SessionUpload = require("../../middleware/SessionUpload");
-const MissingUpload = require("../../middleware/MissingUpload");
+import express from "express";
+import SessionUpload from "../../middleware/SessionUpload.js";
+import MissingUpload from "../../middleware/MissingUpload.js";
+import { SendEmail } from "../../middleware/SendEmail.js";
+
 const router = express.Router();
-const { SendEmail } = require("../../middleware/SendEmail");
 
 /**
  * @desc upload files to session-data
@@ -34,4 +35,4 @@ router.post(
   }
 );
 
-module.exports = router;
+export default router;

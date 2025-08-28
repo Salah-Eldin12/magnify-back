@@ -1,15 +1,13 @@
-const asyncHandler = require("express-async-handler");
-const jwi = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const { UserReport } = require("../models/UserReport");
-const twilio = require("twilio");
-
-const {
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import twilio from "twilio";
+import {
   UserSc,
   ValidatePhoneLogin,
   ValidateEmailLogin,
   ValidateCreateUser,
-} = require("../models/UsersSc");
+} from "../models/UsersSc.js";
 
 // Twilio configuration
 const twilioClient = twilio(
@@ -23,9 +21,9 @@ const twilioClient = twilio(
  * @method POST
  * @access private only admin
  */
-const createUser = asyncHandler(async (req, res) => {
-  const { email, userName } = req.body;
-  const { error } = ValidateCreateUser(req.body);
+const createUser = asyncHandler(async (req, res, next) => {
+  const { email, userName, fname, lname } = req.body;
+  const { error } = ValidateCreateUser({ email, userName, fname, lname });
 
   const lang = req.headers.lang;
   const getText = (enText, arText) => {
@@ -55,14 +53,15 @@ const createUser = asyncHandler(async (req, res) => {
     });
   }
 
-  user = new UserSc(req.body);
+  user = new UserSc({ email, userName, fname, lname });
 
   const { password, ...other } = user._doc;
   await user.save();
-  res.status(200).json({
-    ...other,
-    message: getText("User Created Successfully", "تم انشاء التمستخدم بنجاح"),
-  });
+
+  req.data = other;
+  req.userEmail = email;
+
+  return next();
 });
 
 /**
@@ -111,7 +110,7 @@ const loginWithEmail = asyncHandler(async (req, res) => {
       ),
     });
   }
-  const token = jwi.sign({ id: user._id }, process.env.TOKEN_LOGIN_KEY, {
+  const token = jwt.sign({ id: user._id }, process.env.TOKEN_LOGIN_KEY, {
     expiresIn: "10h",
   });
   const { password, ...other } = user._doc;
@@ -159,7 +158,7 @@ const loginWithPhone = asyncHandler(async (req, res) => {
       customCode: otpGenerator,
     })
     .then(async () => {
-      const PassToken = jwi.sign(
+      const PassToken = jwt.sign(
         { id: user._id },
         process.env.TOKEN_VERIFY_KEY
       );
@@ -210,7 +209,7 @@ const VerifyOtp = asyncHandler(async (req, res) => {
       to: `+${phoneNumber}`,
     })
     .then(async () => {
-      const token = jwi.sign({ id: user._id }, process.env.TOKEN_LOGIN_KEY, {
+      const token = jwt.sign({ id: user._id }, process.env.TOKEN_LOGIN_KEY, {
         expiresIn: "1d",
       });
       user.verifyLink = "";
@@ -230,16 +229,10 @@ const VerifyOtp = asyncHandler(async (req, res) => {
  * @method POST
  * @access public
  */
-const Report = asyncHandler(async (req, res) => {
-  const userReport = new UserReport(req.body);
-  await userReport.save();
-  res.status(200).json({ message: "done" });
-});
+// const Report = asyncHandler(async (req, res) => {
+//   const userReport = new UserReport(req.body);
+//   await userReport.save();
+//   res.status(200).json({ message: "done" });
+// });
 
-module.exports = {
-  createUser,
-  loginWithEmail,
-  Report,
-  loginWithPhone,
-  VerifyOtp,
-};
+export { createUser, loginWithEmail, loginWithPhone, VerifyOtp };

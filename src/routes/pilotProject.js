@@ -1,13 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const { VerifyTokenAdmin } = require("../../middleware/verifyToken");
-const { UploadPilotProject } = require("../../middleware/UploadPilotProject");
-const {
+import express from "express";
+import { VerifyTokenAdmin } from "../../middleware/verifyToken.js";
+import { UploadPilotProject } from "../../middleware/UploadPilotProject.js";
+import {
   createPilotProject,
   deletePilotProject,
   getPilotProjects,
   getPilotProject,
-} = require("../controllers/pilotProjectController");
+} from "../controllers/pilotProjectController.js";
+
+const router = express.Router();
 
 // upload pilot project
 router.post(
@@ -23,4 +24,4 @@ router.get("/", VerifyTokenAdmin, getPilotProjects);
 // delete pilot project
 router.delete("/:name", VerifyTokenAdmin, deletePilotProject);
 
-module.exports = router;
+export default router;

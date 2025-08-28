@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: Verdana, Geneva, sans-serif;
+      background: #f9f9f9;
+    }
+
+    #container {
+      margin: 0px auto;
+      height: auto;
+      border: solid 0.5px #497B62;
+      border-radius: 20px 0px 20px 20px;
+      max-width: 700px;
+      background: #ffffff;
+    }
+
+    #top-img {
+      margin-bottom: 60px;
+      border-radius: 20px 0px 20px 0px;
+      display: block;
+      max-width: 100%;
+      height: 45px;
+    }
+
+    #logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    #content {
+      height: 100%;
+      width: 100%;
+      padding: 0px 25px;
+      text-align: center;
+      margin: 30px auto;
+    }
+
+    #content h2 {
+      font-weight: 600;
+      font-size: 25px;
+      margin-bottom: 30px;
+      color: #497B62;
+      font-family: inherit;
+    }
+
+    #content p {
+      font-size: 18px;
+      line-height: 1.5;
+      font-weight: 600;
+      margin: auto;
+      margin-bottom: 30px;
+      color: #497B62;
+      font-family: inherit;
+    }
+
+
+    #link_to a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #D2ECDF;
+      font-size: 16px;
+      text-align: center;
+      line-height: 40px;
+      padding: 5px 80px;
+      border-radius: 45px;
+      background-color: #497B62;
+      display: block;
+      width: fit-content;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+
+    #link_to p {
+      font-size: 16px;
+      color: #497B62;
+      font-weight: 500;
+    }
+
+
+    footer #links {
+      margin-top: 80px;
+      text-align: center;
+    }
+
+    footer p {
+      color: #D2ECDF;
+      text-align: center;
+      background-color: #497B62;
+      padding: 15px 0px;
+      margin-top: 20px;
+      border-radius: 0px 0px 20px 20px;
+      font-size: 12px;
+    }
+
+    footer #links>a {
+      text-align: center;
+      text-decoration: none;
+      font-weight: 500;
+      color: #497B62;
+      opacity: 90%;
+      margin: 0px 15px;
+      font-size: 14px;
+      font-family: inherit;
+
+    }
+
+    footer #links>a b {
+      font-weight: bolder;
+    }
+
+    /* media query */
+    @media (max-width: 600px) {
+      #container {
+        border-radius: 0;
+      }
+
+      #content h2 {
+        font-size: 20px;
+      }
+
+      #content p {
+        font-size: 14px;
+      }
+
+      #link_to a {
+        font-size: 14px;
+        padding: 8px 50px;
+        line-height: 30px;
+      }
+
+      footer #links>a {
+        display: block;
+        margin: 10px auto;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container" dir="rtl">
+    <img id="top-img" src="cid:icon@cid" width="100%">
+    <!-- Logo -->
+    <div id="logo-container">
+      <img src="cid:logo@cid" alt="Magnify Logo" width="220" />
+    </div>
+    <!-- Content -->
+    <div id="content">
+      <h2>مرحبا, {{name}}</h2>
+      <p>
+        لقد طلبت مؤخرًا تعيين كلمة مرور جديدة. الرجاء النقر على الرابط, أدناه <br /> لإكمال طلب إعادة تعيين كلمة المرور
+        الخاصة بك.
+      </p>
+      <div id="link_to">
+        <a href={{passToken}} id="link">إعادة تعيين كلمة المرور
+        </a>
+        <p>
+          هذا الرابط ستنتهي صلاحيته بعد 10 دقائق.
+        </p>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div id="links">
+        <a href=""><b>شكرًا، magnify</b></a>
+        <a href="https://magnify-vt.com/contact/">هل تحتاج إلى مساعدة؟ <b> تواصل معنا</b></a>
+        <a href="https://magnify-vt.com/privacy-policy/"><b>سياسة الخصوصية</b></a>
+      </div>
+      <p>
+        © {{year}} {{company}}. جميع الحقوق محفوظة. </p>
+    </footer>
+  </div>
+</body>
+
+</html>

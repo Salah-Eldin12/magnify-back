@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const joi = require("joi");
-const valid = require("validator");
+import mongoose from "mongoose";
+import Joi from "joi";
+import valid from "validator";
 
 const NewUserSchema = new mongoose.Schema(
   {
@@ -65,46 +65,51 @@ const UserSc = mongoose.model("usersData", NewUserSchema);
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userValidate = {
-  userName: joi.string().trim().required().min(3).max(30).messages({
+  userName: Joi.string().trim().required().min(3).max(30).messages({
     "string.min": `User Name must be at least 3 characters`,
     "any.required": "User Name is required",
   }),
-  fname: joi.string().trim().required().min(3).max(15).messages({
+  fname: Joi.string().trim().required().min(3).max(15).messages({
     "string.min": `First Name must be at least 3 characters`,
     "any.required": "First Name is required",
   }),
-  lname: joi.string().trim().required().min(3).max(15).messages({
+  lname: Joi.string().trim().required().min(3).max(15).messages({
     "string.min": `Last Name must be at least 3 characters`,
     "any.required": "Last Name is required",
   }),
-  email: joi.string().trim().required().lowercase().regex(emailRegex).messages({
-    "any.required": "Email is required",
-    "string.pattern.base": "Invalid E-mail",
-  }),
-  phone: joi.number().integer(),
-  projectsData: joi.array().items(),
-  isAdmin: joi.boolean(),
+  email: Joi.string()
+    .trim()
+    .required()
+    .lowercase()
+    .pattern(emailRegex)
+    .messages({
+      "any.required": "Email is required",
+      "string.pattern.base": "Invalid E-mail",
+    }),
+  phone: Joi.number().integer(),
+  projectsData: Joi.array().items(),
+  isAdmin: Joi.boolean(),
 };
 
 const ValidateCreateUser = (obj) => {
-  const schema = joi.object().keys(userValidate);
+  const schema = Joi.object().keys(userValidate);
   return schema.validate(obj);
 };
 
 const ValidateEmailLogin = (obj) => {
-  const schema = joi.object({
-    email: joi.string().trim().required().regex(emailRegex).messages({
+  const schema = Joi.object({
+    email: Joi.string().trim().required().pattern(emailRegex).messages({
       "any.required": "Email is required",
       "string.pattern.base": "Invalid email",
     }),
-    password: joi.string().trim().min(8).max(16),
+    password: Joi.string().trim().min(8).max(16),
   });
   return schema.validate(obj);
 };
 
 const ValidatePhoneLogin = (obj) => {
-  const schema = joi.object({
-    phone: joi.string().trim().required().messages({
+  const schema = Joi.object({
+    phone: Joi.string().trim().required().messages({
       "any.required": "phone number is required",
     }),
   });
@@ -112,14 +117,13 @@ const ValidatePhoneLogin = (obj) => {
 };
 
 const ValidateUpdatePass = (obj) => {
-  const schema = joi.object({
-    password: joi
-      .string()
+  const schema = Joi.object({
+    password: Joi.string()
       .trim()
       .min(8)
       .max(16)
       .required()
-      .regex(
+      .pattern(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d[\]{};:=<>_+^#$@!%*?&]{8,16}$/
       )
       .messages({
@@ -132,11 +136,11 @@ const ValidateUpdatePass = (obj) => {
 };
 
 const ValidateUpdateData = (obj) => {
-  const schema = joi.object().keys(userValidate);
+  const schema = Joi.object().keys(userValidate);
   return schema.validate(obj);
 };
 
-module.exports = {
+export {
   UserSc,
   ValidateCreateUser,
   ValidateEmailLogin,

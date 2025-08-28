@@ -1,6 +1,5 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   getUser,
   updatePass,
   getUsers,
@@ -8,8 +7,10 @@ const {
   deleteUser,
   updateUser,
   getUserByUserName,
-} = require("../controllers/userController");
-const { VerifyTokenAdmin } = require("../../middleware/verifyToken");
+} from "../controllers/userController.js";
+import { VerifyTokenAdmin } from "../../middleware/verifyToken.js";
+
+const router = express.Router();
 
 // get all users
 router.get("/", VerifyTokenAdmin, getUsers);
@@ -21,8 +22,8 @@ router.get("/client/:userName", getUserByUserName);
 // update user password
 router.put("/update-password/:id", updatePass);
 // update user
-router.put("/update-user/:userName", updateUser);
+router.put("/update-user/:userName", VerifyTokenAdmin, updateUser);
 // delete user
 router.delete("/delete-user/:id", VerifyTokenAdmin, deleteUser);
 
-module.exports = router;
+export default router;

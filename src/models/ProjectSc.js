@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
-const valid = require("validator");
+import mongoose from "mongoose";
+import Joi from "joi";
+import valid from "validator";
 
 // Email regex pattern
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -98,7 +98,4 @@ const validateProjectData = (data) => {
   return projectValidationSchema.validate(data, { abortEarly: false });
 };
 
-module.exports = {
-  ProjectSc,
-  validateProjectData,
-};
+export { ProjectSc, validateProjectData };

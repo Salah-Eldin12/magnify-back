@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: "Montserrat", Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    #container {
+      margin: 0px auto;
+      height: auto;
+      border: solid 0.5px #497B62;
+      border-radius: 20px 0px 20px 20px;
+      max-width: 800px;
+      background: #ffffff;
+    }
+
+    #top-img {
+      margin-bottom: 30px;
+      border-radius: 20px 0px 20px 0px;
+      display: block;
+      max-width: 100%;
+      height: 45px;
+    }
+
+    #logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+
+    #content {
+      height: 100%;
+      width: 100%;
+      padding: 0px 25px;
+      text-align: center;
+      margin: 30px auto;
+    }
+
+    #content h2 {
+      font-weight: 600;
+      font-size: 23px;
+      margin-bottom: 10px;
+      color: #497B62;
+    }
+
+    #content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: auto;
+      color: #497B62;
+      opacity: 90%;
+    }
+
+    #content p b a,
+    #steps li b a {
+      color: #497B62;
+      text-decoration: none;
+    }
+
+    #steps {
+      margin: 25px auto;
+      text-align: left;
+      width: 80%;
+      color: #497B62;
+    }
+
+    #steps h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #497B62;
+      text-align: center;
+    }
+
+    #steps ol {
+      padding-left: 20px;
+      text-align: center;
+      list-style: none;
+    }
+
+    #steps li {
+      margin-bottom: 25px;
+      text-align: center;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      border: solid 2px #D2ECDF;
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    #steps li>span {
+      font-size: 40px;
+      background-color: #D2ECDF;
+      color: #497B62;
+      font-weight: bolder;
+      display: block;
+      line-height: 1.8;
+      width: 80px;
+      height: 80px;
+      border-radius: 100%;
+      margin: auto;
+      border: solid #497B62 4px;
+    }
+
+    #steps li p {
+      font-size: 16px;
+      line-height: 1.4;
+      margin: 15px auto;
+    }
+  #steps li p #step_link {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    #link {
+      text-decoration: none;
+      font-weight: 400;
+      color: #D2ECDF;
+      font-size: 15px;
+      text-align: center;
+      line-height: 40px;
+      padding: 5px 80px;
+      border-radius: 45px;
+      background-color: #497B62;
+      display: block;
+      width: fit-content;
+      margin: auto;
+      margin-top: 15px;
+    }
+
+    footer #links {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: #D2ECDF;
+      text-align: center;
+      background-color: #497B62;
+      padding: 15px 0px;
+      margin-top: 30px;
+      border-radius: 0px 0px 20px 20px;
+    }
+
+    footer #links>a {
+      text-align: center;
+      text-decoration: none;
+      font-weight: 400;
+      color: #497B62;
+      margin: 0px 15px;
+      font-size: 12px;
+    }
+
+    /* media query */
+    @media (max-width: 600px) {
+      #container {
+        border-radius: 0;
+      }
+
+      #content h2 {
+        font-size: 20px;
+      }
+
+      #content p {
+        font-size: 14px;
+      }
+
+      #steps {
+        width: 100%;
+      }
+
+      #steps h3 {
+        font-size: 15px;
+      }
+
+      #steps li p {
+        font-size: 13px;
+      }
+
+      #link {
+        font-size: 14px;
+        padding: 8px 50px;
+        line-height: 30px;
+      }
+
+      footer #links>a {
+        display: block;
+        margin: 10px auto;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <img id="top-img" src="cid:icon@cid" width="100%">
+    <!-- Logo -->
+    <div id="logo-container">
+      <img src="cid:logo@cid" alt="Magnify Logo" width="220" />
+    </div>
+    <!-- Content -->
+    <div id="content">
+      <h2>Hello, {{name}}</h2>
+      <p>
+        Your account has been created successfully on <b>{{company}}</b>.
+      </p>
+      <p>
+        You can now login using your registered email: <b>{{email}}</b>.
+      </p>
+      <!-- register steps -->
+      <div id="steps">
+        <h3>Next steps to complete your account setup:</h3>
+        <ol>
+          <li>
+            <span>1</span>
+            <p>Access your Magnify account through the login page below,
+              <br> using your email: <b>{{email}}</b> and the default password: <b>User1234</b>
+              . <a href={{loginLink}} id="link">Login page</a>
+            </p>
+          </li>
+          <li>
+            <span>2</span>
+            <p>Verify your account by clicking
+              <span id="step_link">Send
+                verification link
+              </span>
+            </p>
+          </li>
+          <li>
+            <span>3</span>
+            <p>
+              You will receive a confirmation message on your email, then click on 
+              <span id="step_link">Verify my account</span>
+            </p>
+          </li>
+          <li>
+            <span>4</span>
+            <p>After confirming the account, it will take you to the create password page. Create a new password that
+              meets
+              the conditions, then click on <span id="step_link">Set new
+                password</span></p>
+          </li>
+          <li>
+            <span>5</span>
+            <p>After resetting a new password, you will be taken to the login page. Register with your email and new
+              password and start exploring Magnify and enjoy our features.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div id="links">
+        <a href="">Thanks, Magnify</a>
+        <a href="https://magnify-vt.com/contact/">Need help? <b>Contact us</b></a>
+        <a href="https://magnify-vt.com/privacy-policy/"><b>Privacy policy</b></a>
+      </div>
+      <p>
+        © {{year}} {{company}}. All rights reserved.
+      </p>
+    </footer>
+  </div>
+</body>
+
+</html>

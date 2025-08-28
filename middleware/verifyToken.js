@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const { UserSc } = require("../src/models/UsersSc");
+import jwt from "jsonwebtoken";
+import { UserSc } from "../src/models/UsersSc.js";
 
 function VerifyToken(req, res, next) {
   const token = req.headers.token;
@@ -27,4 +27,4 @@ function VerifyTokenAdmin(req, res, next) {
   });
 }
 
-module.exports = { VerifyTokenAdmin };
+export { VerifyTokenAdmin };

@@ -1,12 +1,12 @@
-const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const {
+import asyncHandler from "express-async-handler";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import {
   UserSc,
   ValidateUpdatePass,
   ValidateUpdateData,
-} = require("../models/UsersSc");
-const { ProjectSc } = require("../models/ProjectSc");
+} from "../models/UsersSc.js";
+import { ProjectSc } from "../models/ProjectSc.js";
 
 /**
  * @desc get all users
@@ -256,7 +256,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).send({ message: "User deleted successfully" });
 });
 
-module.exports = {
+export {
   getUser,
   updatePass,
   getUsers,

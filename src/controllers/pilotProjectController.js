@@ -1,14 +1,19 @@
-const asyncHandler = require("express-async-handler");
-const extract = require("extract-zip");
-const path = require("path");
-const fs = require("fs");
+import asyncHandler from "express-async-handler";
+import extract from "extract-zip";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const public_project_folder = path.join(
   __dirname,
   "..",
-  process.env.UPLOAD_PROJECTS_PATH
+  "..",
+  "public/projects"
 );
-const pilot_project_path = path.join(public_project_folder + "pilot_projects");
+const pilot_project_path = path.join(public_project_folder, "pilot_projects");
 
 if (!fs.existsSync(pilot_project_path)) {
   fs.mkdirSync(pilot_project_path, { recursive: true });
@@ -28,10 +33,12 @@ const createPilotProject = asyncHandler(async (req, res) => {
   const projectFolder = path.join(req.file.path, "..");
 
   // extract the zip file
-  await extract(req.file.path, { dir: projectFolder }, (err) => {
+  try {
+    await extract(req.file.path, { dir: projectFolder });
+  } catch (err) {
     return res.status(400).send({ message: "cannot extract the file" });
-  });
-  // // remove zip file after extract
+  }
+  // remove zip file after extract
   fs.rmSync(req.file.path);
 
   // save project in db
@@ -48,7 +55,7 @@ const createPilotProject = asyncHandler(async (req, res) => {
 const getPilotProjects = asyncHandler(async (req, res) => {
   const pilot_projects = fs.readdirSync(pilot_project_path);
 
-  if (pilot_projects.length === 0 || !pilot_projects) {
+  if (!pilot_projects || pilot_projects.length === 0) {
     return res.status(404).send({ message: "No pilot projects added yet" });
   }
 
@@ -65,7 +72,7 @@ const getPilotProjects = asyncHandler(async (req, res) => {
 const getPilotProject = asyncHandler(async (req, res) => {
   const { name } = req.params;
 
-  const project = fs.existsSync(pilot_project_path + "/" + name);
+  const project = fs.existsSync(path.join(pilot_project_path, name));
   if (!project) {
     return res.status(404).send("No project found with this name");
   }
@@ -83,7 +90,7 @@ const getPilotProject = asyncHandler(async (req, res) => {
 const deletePilotProject = asyncHandler(async (req, res) => {
   const { name } = req.params;
   try {
-    const projectPath = pilot_project_path + "/" + name;
+    const projectPath = path.join(pilot_project_path, name);
 
     if (!fs.existsSync(projectPath)) {
       return res.status(404).send("Project no found");
@@ -96,7 +103,7 @@ const deletePilotProject = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = {
+export {
   createPilotProject,
   deletePilotProject,
   getPilotProjects,

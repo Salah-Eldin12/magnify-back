@@ -1,12 +1,12 @@
-const moogose = require("mongoose");
+import mongoose from "mongoose";
 
 function ConnectDB() {
   try {
-    moogose.connect(process.env.MONGO_URI);
+    mongoose.connect(process.env.MONGO_URI);
     console.log("connect to database");
   } catch (error) {
     console.log(error);
   }
 }
 
-module.exports = ConnectDB;
+export default ConnectDB;

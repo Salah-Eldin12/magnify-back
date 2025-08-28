@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("express-async-handler");
-const { UserSc } = require("../models/UsersSc");
+import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
+import { UserSc } from "../models/UsersSc.js";
 
 /**
  * @desc verify email
@@ -29,7 +29,7 @@ const sendVerify = asyncHandler(async (req, res, next) => {
   req.verifyLink = PassToken;
   req.userEmail = user.email;
   req.userName = user.fname;
-  next();
+  return next();
 });
 
 /**
@@ -40,7 +40,7 @@ const sendVerify = asyncHandler(async (req, res, next) => {
  */
 const sendResetPassword = asyncHandler(async (req, res, next) => {
   const user = await UserSc.findOne({ email: req.body.email }).select(
-    "verified fname email verifyLink"
+    "verified fname lname email verifyLink"
   );
   const lang = req.headers.lang;
   const getText = (enText, arText) => {
@@ -62,12 +62,14 @@ const sendResetPassword = asyncHandler(async (req, res, next) => {
     expiresIn: "10m",
   });
 
+  const fullName = `${user.fname} ${user.lname}`;
+
   user.verifyLink = passToken;
   await user.save();
   req.verifyLink = passToken;
   req.userEmail = user.email;
-  req.userName = user.fname;
-  next();
+  req.fullName = fullName;
+  return next();
 });
 
-module.exports = { sendVerify, sendResetPassword };
+export { sendVerify, sendResetPassword };

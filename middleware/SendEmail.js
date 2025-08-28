@@ -1,128 +1,171 @@
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const handlebars = require("handlebars");
+import nodemailer from "nodemailer";
+import env from "../config/env.js";
+import { fileURLToPath } from "url";
+import path from "path";
+import hbs from "nodemailer-express-handlebars";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // nodemailer create transport
 const transporter = nodemailer.createTransport({
-  host: `smtp.hostinger.com`,
+  host: env.SMTP_HOST,
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASS,
+    user: env.SMTP_USER,
+    pass: env.SMTP_PASS,
   },
 });
 
+// Handlebars
+transporter.use(
+  "compile",
+  hbs({
+    viewEngine: {
+      extname: ".hbs",
+      layoutsDir: path.join(__dirname, "..", "emails"),
+      defaultLayout: false,
+    },
+    viewPath: path.join(__dirname, "..", "emails"),
+    extName: ".hbs",
+  })
+);
+
 function SendEmail(req, res, next) {
   // routes that need to send email
-  const routes = ["resetPassword", "verifyEmail"];
+  const routes = ["resetPassword", "verifyEmail", "userCreated"];
+  const lang = req.headers.lang;
+  const getText = (enText, arText) => {
+    return lang === "en" || !lang ? enText : arText;
+  };
 
   const EmailsOptions = [
     {
       emailType: "uploadProjectFiles",
-      to: req.ToEmail,
-      cc: [req.CcEmails && req.CcEmails],
+      to: req?.ToEmail,
+      ar_temp: false,
+      cc: [req?.CcEmails && req?.CcEmails],
       emailFile: "uploadProjectFiles",
-      subject: "Project Files Uploaded",
+      subject: `Virtual Tour Ready for ${req?.projectName}`,
       replacement: {
-        link: `${process.env.WEBSITE_URL}`,
-        projectName: req.projectName,
-        projectDate: req.projectDate,
+        link: `${env.WEBSITE_URL}`,
+        projectName: req?.projectName,
+        projectDate: req?.projectDate,
+        company: "magnify",
+        year: new Date().getFullYear(),
       },
     },
     {
       emailType: "filesUpload",
-      to: process.env.PROJECT_UPLOAD_EMAIL,
+      to: env.PROJECT_UPLOAD_EMAIL,
       subject: "New Files Uploaded",
       emailFile: "filesUpload",
+      ar_temp: false,
       replacement: {
-        projectName: req.body.project_name,
-        folderName: req.body.folderName,
+        projectName: req?.body?.project_name,
+        folderName: req?.body?.folderName,
+        company: "magnify",
+        year: new Date().getFullYear(),
       },
     },
     {
       emailType: "resetPassword",
-      to: req.userEmail,
-      subject: "Reset Password",
+      to: req?.userEmail,
+      ar_temp: true,
+      subject: getText("Reset Password", "اعادة تعيين كلمة مرور"),
       emailFile: "resetPassword",
       replacement: {
-        name: req.userName,
-        passToken:
-          `${process.env.WEBSITE_URL}/reset-password/` + req.verifyLink,
+        name: req?.fullName,
+        passToken: `${env.WEBSITE_URL}/reset-password/` + req?.verifyLink,
+        company: "magnify",
+        year: new Date().getFullYear(),
       },
     },
     {
       emailType: "verifyEmail",
-      to: req.userEmail,
-      subject: "Account Verification",
+      to: req?.userEmail,
+      ar_temp: true,
+      subject: getText(
+        "Verify Your magnify Account",
+        "تحقق من حسابك على magnify"
+      ),
       emailFile: "verifyEmail",
       replacement: {
-        name: req.userName,
-        passToken:
-          `${process.env.WEBSITE_URL}/create-password/` + req.verifyLink,
+        name: req?.userName,
+        passToken: `${env.WEBSITE_URL}/create-password/` + req?.verifyLink,
+        company: "magnify",
+        year: new Date().getFullYear(),
+      },
+    },
+    {
+      emailType: "userCreated",
+      to: req.userEmail,
+      ar_temp: false,
+      subject: "Your Magnify account has been created",
+      emailFile: "userCreated",
+      replacement: {
+        name: req?.data?.userName,
+        company: "magnify",
+        loginLink: `${env.WEBSITE_URL}/`,
+        email: req.userEmail,
+        year: new Date().getFullYear(),
       },
     },
   ];
-
+  // target the wanted email template
   const emailOption = EmailsOptions.find(
     (email) => email.emailType === req.body.emailType
   );
-
+  // if email template not found
   if (!emailOption) {
-    // Unknown email type, skip or handle as needed
     return res.status(400).json({ message: "Invalid email type" });
   }
 
-  const { to, subject, replacement, emailFile, cc } = emailOption;
+  const { to, subject, replacement, emailFile, cc, ar_temp } = emailOption;
 
-  let source;
-  try {
-    source = fs
-      .readFileSync(`email/${emailFile}/email.html`, "utf-8")
-      .toString();
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Email template not found", error: err.message });
-  }
-
-  const template = handlebars.compile(source);
-  const htmlToSend = template(replacement);
+  const templatePath = ar_temp
+    ? `${emailFile}/${lang === "en" ? "/email" : "/email_ar"}`
+    : `${emailFile}/${"/email"}`;
 
   const mailOptions = {
-    from: ` Magnifyportal ${process.env.EMAIL_USERNAME}`,
+    from: `"Magnifyportal" <${env.SMTP_USER}>`,
     to: to,
     subject: subject,
-    html: htmlToSend,
+    template: templatePath,
+    context: replacement,
     cc: cc && cc,
     attachments: [
       {
         filename: "mainLogo.png",
-        path: "email/assets/mainLogo.png",
-        cid: "logo",
+        path: "emails/assets/mainLogo.png",
+        cid: "logo@cid",
       },
       {
         filename: "icon.png",
-        path: "email/assets/icon.png",
-        cid: "icon",
+        path: "emails/assets/icon.png",
+        cid: "icon@cid",
       },
     ],
   };
-  try {
-    transporter.sendMail(mailOptions, (err) => {
+
+  // send email
+
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      return res.status(500).send({ message: "email not send" });
+    } else {
       if (routes.includes(req.body.emailType)) {
+        const verifyLink = req.verifyLink;
+        const data = req.data;
         return res
           .status(200)
-          .json({ message: "email send", verifyLink: req.verifyLink });
+          .json({ message: "email send", verifyLink, data });
       } else {
         next();
       }
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Failed to send email", error: error });
-  }
+    }
+  });
 }
 
-module.exports = { SendEmail };
+export { SendEmail };

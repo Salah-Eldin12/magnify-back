@@ -1,9 +1,14 @@
-const asyncHandler = require("express-async-handler");
-const { ProjectSc, validateProjectData } = require("../models/ProjectSc");
-const { UserSc } = require("../models/UsersSc");
-const extract = require("extract-zip");
-const path = require("path");
-const fs = require("fs");
+import asyncHandler from "express-async-handler";
+import { ProjectSc, validateProjectData } from "../models/ProjectSc.js";
+import { UserSc } from "../models/UsersSc.js";
+import extract from "extract-zip";
+import path from "path";
+import fs from "fs";
+import env from "../../config/env.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * @desc get all projects
@@ -71,14 +76,11 @@ const getProjectByName = asyncHandler(async (req, res) => {
  */
 const getProjectFolder = asyncHandler(async (req, res) => {
   const mainFolder = path
-    .join(
-      __dirname,
-      "../",
-      process.env.UPLOAD_PROJECTS_PATH + "/" + req.params.folder
-    )
-    .replaceAll("|", "/");
+    .join(__dirname, "..", "..", "public/projects/" + req.params.folder)
+    .replaceAll("|", "\\");
 
   const folderExist = fs.existsSync(mainFolder);
+
   if (folderExist) {
     res.status(200).send("folder exist");
   } else {
@@ -190,11 +192,12 @@ const UploadFolder = asyncHandler(async (req, res) => {
 
   const projectFolder = path.join(req.file.path, "..");
 
-  // // extract the zip file
-  await extract(req.file.path, { dir: projectFolder }, (err) => {
-    res.status(400).send({ message: "cannot extract the file" });
-  });
-  // // remove zip file after extract
+  try {
+    await extract(req.file.path, { dir: projectFolder });
+  } catch (err) {
+    return res.status(400).send({ message: "cannot extract the file" });
+  }
+  // remove zip file after extract
   fs.rmSync(req.file.path);
 
   res.status(200).send({ message: "file uploaded and extracted" });
@@ -287,7 +290,7 @@ const deleteAccess = asyncHandler(async (req, res) => {
   user.projectsData.splice(projectIndex, 1);
 
   const emailIndex = project.accessUser.findIndex(
-    (email) => email.email === user.email
+    (emailObj) => emailObj.email === user.email
   );
 
   if (emailIndex === -1) {
@@ -358,7 +361,7 @@ const deleteProject = asyncHandler(async (req, res) => {
   res.status(200).send({ message: "Project deleted successfully" });
 });
 
-module.exports = {
+export {
   createProject,
   getProject,
   getProjects,

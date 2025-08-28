@@ -1,23 +1,23 @@
-const asynchandler = require("express-async-handler");
-const { UserReport } = require("../models/UserReport");
-const fastCsv = require("fast-csv");
-const fs = require("fs");
-const csv = fs.createWriteStream("Report.csv");
+// import asyncHandler from "express-async-handler";
+// import { UserReport } from "../models/UserReport.js";
+// import fastCsv from "fast-csv";
+// import fs from "fs";
 
+// const getReport = asyncHandler(async (req, res) => {
+//   const Report = await UserReport.find().select(
+//     "userName email date timeSpent -_id"
+//   );
+//   const csvStream = fastCsv.format({ headers: true });
+//   const writableStream = fs.createWriteStream("Report.csv");
 
-const getReport = asynchandler(async (req, res) => {
-  const Report = await UserReport.find().select(
-    "userName email date timeSpent -_id"
-  );
-  fastCsv
-    .write(Report, { headers: true })
-    .on("end", () => {
-      console.log("write to report successfully");
-      res.download("Report.csv", () => {
-        res.status(200).json({ message: "Report downloaded successfully" });
-      });
-    })
-    .pipe(csv);
-});
+//   writableStream.on("finish", () => {
+//     console.log("write to report successfully");
+//     res.download("Report.csv", () => {
+//       res.status(200).json({ message: "Report downloaded successfully" });
+//     });
+//   });
 
-module.exports = getReport;
+//   csvStream.pipe(writableStream);
+//   Report.forEach((item) => csvStream.write(item));
+//   csvStream.end();
+// });

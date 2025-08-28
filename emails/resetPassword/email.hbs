@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: "Montserrat", Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    #container {
+      margin: 0px auto;
+      height: auto;
+      border: solid 0.5px #497B62;
+      border-radius: 20px 0px 20px 20px;
+      max-width: 700px;
+      background: #ffffff;
+    }
+
+    #top-img {
+      margin-bottom: 30px;
+      border-radius: 20px 0px 20px 0px;
+      display: block;
+      max-width: 100%;
+      height: 45px;
+    }
+
+    #logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    #content {
+      height: 100%;
+      width: 100%;
+      padding: 0px 25px;
+      text-align: center;
+      margin: 30px auto;
+    }
+
+    #content h2 {
+      font-weight:600;
+      font-size: 23px;
+      margin-bottom: 30px;
+      color: #497B62;
+    }
+
+    #content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: auto;
+      margin-bottom: 30px;
+      color: #497B62;
+    }
+
+    #link {
+      text-decoration: none;
+      font-weight: 500;
+      color: #D2ECDF;
+      font-size: 15px;
+      text-align: center;
+      line-height: 40px;
+      padding: 5px 80px;
+      border-radius: 45px;
+      background-color: #497B62;
+      display: block;
+      width: fit-content;
+      margin: auto;
+      margin-bottom: 30px;
+    }
+
+    footer #links {
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 12px;
+      color: #D2ECDF;
+      text-align: center;
+      background-color: #497B62;
+      padding: 15px 0px;
+      margin-top: 20px;
+      border-radius: 0px 0px 20px 20px;
+    }
+
+    footer #links>a {
+      text-align: center;
+      text-decoration: none;
+      font-weight: 400;
+      color: #497B62;
+      margin: 0px 15px;
+      font-size: 12px;
+    }
+
+    /* media query */
+    @media (max-width: 600px) {
+      #container {
+        border-radius: 0;
+      }
+
+      #content h2 {
+        font-size: 20px;
+      }
+
+      #content p {
+        font-size: 14px;
+      }
+
+      #link {
+        font-size: 14px;
+        padding: 8px 50px;
+        line-height: 30px;
+      }
+
+      footer #links>a {
+        display: block;
+        margin: 10px auto;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <img id="top-img" src="cid:icon@cid" width="100%">
+    <!-- Logo -->
+    <div id="logo-container">
+      <img src="cid:logo@cid" alt="Magnify Logo" width="220" />
+    </div>
+    <!-- Content -->
+    <div id="content">
+      <h2>Hello, {{name}}</h2>
+      <p>
+        You recently requested a new password
+        Please click link below to complete your new password request
+      </p>
+      <div>
+        <a href={{passToken}} id="link">Reset password</a>
+        <p style="font-size: 15px; color:#497B62; font-weight: 500;">This link will expire after 10 minute</p>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div id="links">
+        <a href="">Thanks, Magnify</a>
+        <a href="https://magnify-vt.com/contact/">Need help? <b>Contact us</b></a>
+        <a href="https://magnify-vt.com/privacy-policy/"><b>Privacy policy</b></a>
+      </div>
+      <p>
+        © {{year}} {{company}}. All rights reserved.
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

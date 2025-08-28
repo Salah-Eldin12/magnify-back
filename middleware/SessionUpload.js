@@ -1,7 +1,12 @@
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
 const maxSize = 100 * 1024 * 1024; // 100MB
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const uploadFolder = path.join(__dirname, "..", "..", "photo_session_data"); // Move up one directory from the current folder
 const allowedTypes = [
@@ -11,7 +16,6 @@ const allowedTypes = [
   "video/mkv",
   "video/quicktime",
 ];
-
 
 // Ensure the directory exists before saving the file
 if (!fs.existsSync(uploadFolder)) {
@@ -39,4 +43,4 @@ const SessionUpload = multer({
   limits: { fileSize: maxSize },
 });
 
-module.exports = SessionUpload;
+export default SessionUpload;

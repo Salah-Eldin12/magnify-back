@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   createProject,
   getProjects,
   getProject,
@@ -11,10 +11,10 @@ const {
   getProjectByName,
   UploadFolder,
   getProjectFolder,
-} = require("../controllers/projectController");
-const { UploadProject } = require("../../middleware/UploadProjectFolder");
-const { VerifyTokenAdmin } = require("../../middleware/verifyToken");
-const { SendEmail } = require("../../middleware/SendEmail");
+} from "../controllers/projectController.js";
+import { UploadProject } from "../../middleware/UploadProjectFolder.js";
+import { VerifyTokenAdmin } from "../../middleware/verifyToken.js";
+import { SendEmail } from "../../middleware/SendEmail.js";
 
 const router = express.Router();
 
@@ -46,4 +46,4 @@ router.get("/projectName/:name", getProjectByName);
 // get project folder
 router.get("/project-folder/:folder", getProjectFolder);
 
-module.exports = router;
+export default router;

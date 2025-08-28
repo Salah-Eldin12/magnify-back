@@ -1,4 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const allowedHosts = process.env.ALLOWED_IFRAME_HOSTS?.split(",") || [];
 
@@ -22,6 +23,4 @@ function IframeAllowedHosts(req, res, next) {
   return res.status(403).send("Forbidden");
 }
 
-module.exports = {
-  IframeAllowedHosts,
-};
+export { IframeAllowedHosts };
