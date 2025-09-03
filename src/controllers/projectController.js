@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const projectsFolder = path.join(__dirname, "..", env.UPLOAD_PROJECTS_PATH);
+
 /**
  * @desc get all projects
  * @route /api/project/
@@ -78,7 +79,7 @@ const getProjectByName = asyncHandler(async (req, res) => {
 const getProjectFolder = asyncHandler(async (req, res) => {
   const mainFolder = path
     .join(projectsFolder + req.params.folder)
-    .replaceAll("|", "\\");
+    .replaceAll("|", "/");
 
   const folderExist = fs.existsSync(mainFolder);
 
@@ -122,7 +123,6 @@ const createProject = asyncHandler(async (req, res) => {
  * @access private only admin
  */
 const updateProject = asyncHandler(async (req, res) => {
-  const { status } = req.body;
   const { error } = validateProjectData(req.body);
   const lang = req.headers.lang;
   const getText = (enText, arText) => {
@@ -139,7 +139,7 @@ const updateProject = asyncHandler(async (req, res) => {
       .status(400)
       .send({ message: getText("Project not found", "المشورع غير موجود") });
   }
-  // check for project no
+  // check for project name if exist
   const checkProject = await ProjectSc.find({
     name: req.body.name,
     _id: { $ne: project._id },
@@ -154,17 +154,7 @@ const updateProject = asyncHandler(async (req, res) => {
     });
   }
 
-  if (status === "done") {
-    await ProjectSc.findByIdAndUpdate(req.params.id, {
-      $unset: { subDate: 1 },
-    });
-  } else {
-    await ProjectSc.findByIdAndUpdate(req.params.id, {
-      $unset: { date: 1 },
-    });
-  }
-
-  const { accessUser, ...other } = req.body;
+  const { accessUser, status, date, subDate, ...other } = req.body;
   // Update the project
   project = await ProjectSc.findByIdAndUpdate(
     req.params.id,
@@ -186,12 +176,12 @@ const updateProject = asyncHandler(async (req, res) => {
  * @method POST
  * @access private only admin
  */
-const UploadFolder = asyncHandler(async (req, res) => {
+const UploadFolder = asyncHandler(async (req, res, next) => {
+  const projectFolder = path.join(req.file.path, "..");
+
   if (!req.file) {
     return res.status(400).send({ message: "Upload failed" });
   }
-
-  const projectFolder = path.join(req.file.path, "..");
 
   try {
     await extract(req.file.path, { dir: projectFolder });
@@ -199,9 +189,126 @@ const UploadFolder = asyncHandler(async (req, res) => {
     return res.status(400).send({ message: "cannot extract the file" });
   }
   // remove zip file after extract
-  fs.rmSync(req.file.path);
 
-  res.status(200).send({ message: "file uploaded and extracted" });
+  if (fs.existsSync(req.file.path))
+    fs.rmSync(req.file.path, { recursive: true, force: true });
+
+  next();
+});
+
+/**
+ * @desc upload project files
+ * @route /api/project/delete-sub-project/:id
+ * @method POST
+ * @access private only admin
+ */
+const deleteSubProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { date } = req.body;
+
+  if (!id || !date) {
+    return res.status(400).json({ error: "Project ID and date are required" });
+  }
+
+  const project = await ProjectSc.findById(id);
+  if (!project) return res.status(404).json({ error: "Project not found" });
+
+  const isoDate = new Date(date).toISOString().split("T")[0];
+
+  const updatedSubDates = project.subDate.filter(
+    (d) => new Date(d).toISOString().split("T")[0] !== isoDate
+  );
+
+  project.subDate = updatedSubDates;
+  await project.save();
+
+  res.status(200).json({
+    message: "Sub project date deleted successfully",
+    subDate: project.subDate,
+  });
+});
+
+/**
+ * @desc cancel upload file
+ * @route /api/project/cancel-upload/:id
+ * @method DELETE
+ * @access private only admin
+ */
+
+const CancelUpload = asyncHandler(async (req, res) => {
+  const { projectType, date, uploadFor } = req.body;
+  const projectId = req.params.id;
+
+  if (uploadFor === "pilot") {
+    const pilot_project_path = path.join(projectsFolder, "pilot_projects");
+    const name = projectId.split(".")[0];
+
+    try {
+      const projectPath = path.join(pilot_project_path, name);
+
+      if (!fs.existsSync(projectPath)) {
+        return res.status(404).send("Project no found");
+      }
+
+      fs.rmSync(projectPath, { recursive: true, force: true });
+      return res.status(200).send("Project delete successfully");
+    } catch (error) {
+      return res.status(404).send("delete project error " + error);
+    }
+  } else {
+    const project = await ProjectSc.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    try {
+      // delete sub date from db
+      if (projectType === "subDate") {
+        const isoDate = new Date(date).toISOString().split("T")[0];
+        const updatedSubDates = project.subDate.filter(
+          (d) => new Date(d).toISOString().split("T")[0] !== isoDate
+        );
+        const deleteSubFolder = path.join(project.url, isoDate);
+        if (deleteSubFolder && fs.existsSync(deleteSubFolder)) {
+          fs.rmSync(deleteSubFolder, { recursive: true, force: true });
+        }
+        project.subDate = updatedSubDates;
+        await project.save();
+      } else {
+        if (project.url && fs.existsSync(project.url)) {
+          fs.rmSync(project.url, { recursive: true, force: true });
+        }
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Canceled upload files deleted successfully" });
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to delete upload files" });
+    }
+  }
+});
+
+/**
+ * @desc get all access email in project
+ * @route /api/project/email-access/:id
+ * @method GET
+ * @access private only admin
+ */
+const emailAccess = asyncHandler(async (req, res) => {
+  const projectID = req.params.id;
+  const lang = req.headers.lang;
+  const getText = (enText, arText) => {
+    return lang === "en" || !lang ? enText : arText;
+  };
+
+  const project = await ProjectSc.findById(projectID);
+
+  if (!project) {
+    return res.status(404).send({ message: "project not found" });
+  }
+
+  res.status(200).send(project.accessUser);
 });
 
 /**
@@ -374,4 +481,7 @@ export {
   getProjectByName,
   UploadFolder,
   getProjectFolder,
+  CancelUpload,
+  deleteSubProject,
+  emailAccess,
 };

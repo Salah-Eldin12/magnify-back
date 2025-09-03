@@ -21,8 +21,8 @@ const getUsers = asyncHandler(async (req, res) => {
     .select("-password -createdAt -__v -updatedAt -verifyLink ");
 
   // user pagination
-  const page = parseInt(req.query.page) || 1; // الصفحة الحالية
-  const limit = parseInt(req.query.limit) || 50; // عدد العناصر لكل صفحة
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 50;
   const skip = (page - 1) * limit;
   const totalUsers = await UserSc.countDocuments({ isAdmin: { $ne: true } });
   const users = await UserSc.find({ isAdmin: { $ne: true } })
@@ -41,6 +41,37 @@ const getUsers = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({ users, next, prev, totalPages, page, usersSearch });
+});
+/**
+ * @desc get all users emails
+ * @route /api/user/users_email
+ * @method GET
+ * @access public
+ */
+const getUsersEmails = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+  const { owner_user } = req.query;
+
+  let filter = { isAdmin: { $ne: true } };
+
+  if (q) {
+    filter.email = { $regex: q, $options: "i" };
+  }
+
+  if (owner_user) {
+    filter.userName = { $ne: owner_user };
+  }
+
+  const users = await UserSc.find(filter)
+    .sort({ fname: 1 })
+    .limit(5)
+    .select("email");
+
+  if (!users || users.length === 0) {
+    return res.status(404).json({ message: "No users found" });
+  }
+
+  res.status(200).json(users);
 });
 
 /**
@@ -264,4 +295,5 @@ export {
   updateUser,
   deleteUser,
   getUserByUserName,
+  getUsersEmails,
 };

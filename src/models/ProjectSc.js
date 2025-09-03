@@ -18,6 +18,7 @@ const ProjectSchema = new mongoose.Schema(
     height: { type: String },
     consultant: { type: String, trim: true },
     duration: { type: String },
+    url: { type: String },
     img: {
       name: { type: String },
       path: { type: String },
@@ -70,6 +71,7 @@ const projectValidationSchema = Joi.object({
     .label("Project Type")
     .allow(""),
   area: Joi.string().label("Project Area").allow(""),
+  url: Joi.string().label("Project Area").allow(""),
   height: Joi.string().label("Project Height").allow(""),
   consultant: Joi.string().label("Consultant").allow(""),
   duration: Joi.string().label("Project Duration").allow(""),

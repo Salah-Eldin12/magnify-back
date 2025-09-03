@@ -15,7 +15,6 @@ import sendMailsRoutes from "./src/routes/sendMails.js";
 import projectImgRoutes from "./src/routes/ProjectImg.js";
 import { fileURLToPath } from "url";
 
-// For __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -24,6 +23,7 @@ connectDB();
 
 // Middleware
 const app = express();
+
 app.use(express.json({ extended: true, limit: "10gb" }));
 app.use(express.urlencoded({ extended: true, limit: "10gb" }));
 app.use(
@@ -35,7 +35,6 @@ app.use(
       "Content-Type, Authorization, token, isOwner, user, Access-Control-Allow-Origin,lang",
   })
 );
-
 app.use(
   "/api/public",
   express.static(path.join(__dirname, "public"), { maxAge: "1y" })
@@ -56,6 +55,7 @@ app.use("/api/upload-project-img", projectImgRoutes);
 
 // Start the server
 const port = process.env.PORT || 8001;
+
 app.listen(port, (err) => {
   if (err) {
     console.error("Error starting server:", err);

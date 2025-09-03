@@ -34,7 +34,12 @@ transporter.use(
 
 function SendEmail(req, res, next) {
   // routes that need to send email
-  const routes = ["resetPassword", "verifyEmail", "userCreated"];
+  const routes = [
+    "resetPassword",
+    "verifyEmail",
+    "userCreated",
+    "uploadProjectFiles",
+  ];
   const lang = req.headers.lang;
   const getText = (enText, arText) => {
     return lang === "en" || !lang ? enText : arText;
@@ -51,7 +56,9 @@ function SendEmail(req, res, next) {
       replacement: {
         link: `${env.WEBSITE_URL}`,
         projectName: req?.projectName,
-        projectDate: req?.projectDate,
+        projectDate:
+          req?.projectDate &&
+          new Date(req?.projectDate).toISOString().split("T")[0],
         company: "magnify",
         year: new Date().getFullYear(),
       },
@@ -156,6 +163,11 @@ function SendEmail(req, res, next) {
       return res.status(500).send({ message: "email not send" });
     } else {
       if (routes.includes(req.body.emailType)) {
+        if (req.body.emailType === "uploadProjectFiles") {
+          return res
+            .status(200)
+            .send({ message: "file uploaded and extracted" });
+        }
         const verifyLink = req.verifyLink;
         const data = req.data;
         return res

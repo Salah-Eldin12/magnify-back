@@ -150,6 +150,16 @@ const loginWithPhone = asyncHandler(async (req, res) => {
   };
   const otpGenerator = generateOTP();
 
+  const PassToken = jwt.sign({ id: user._id }, process.env.TOKEN_VERIFY_KEY);
+  user.verifyLink = PassToken;
+  user.otp = otpGenerator;
+  await user.save();
+
+  // res.status(200).json({
+  //   message: "OTP sent successfully",
+  //   verifyLink: user.verifyLink,
+  // });
+
   twilioClient.verify.v2
     .services(process.env.TWILIO_SERVICE_SID)
     .verifications.create({

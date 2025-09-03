@@ -11,8 +11,11 @@ import {
   getProjectByName,
   UploadFolder,
   getProjectFolder,
+  CancelUpload,
+  deleteSubProject,
+  emailAccess,
 } from "../controllers/projectController.js";
-import { UploadProject } from "../../middleware/UploadProjectFolder.js";
+import { UploadProjectFiles } from "../../middleware/UploadProjectFolder.js";
 import { VerifyTokenAdmin } from "../../middleware/verifyToken.js";
 import { SendEmail } from "../../middleware/SendEmail.js";
 
@@ -30,15 +33,21 @@ router.put("/:id", VerifyTokenAdmin, updateProject);
 router.post(
   "/upload-folder/:id",
   VerifyTokenAdmin,
-  UploadProject.single("project-folder"),
-  SendEmail,
-  UploadFolder
+  UploadProjectFiles,
+  UploadFolder,
+  SendEmail
 );
 // add and delete project access users
 router.put("/add-access/:id", VerifyTokenAdmin, addAccess);
 router.put("/delete-access/:id", VerifyTokenAdmin, deleteAccess);
+router.get("/email-access/:id", VerifyTokenAdmin, emailAccess);
+
 // delete project
 router.delete("/:id", VerifyTokenAdmin, deleteProject);
+// delete sub project
+router.delete("/delete-sub-project/:id", VerifyTokenAdmin, deleteSubProject);
+// cancel upload
+router.delete("/cancel-upload/:id", VerifyTokenAdmin, CancelUpload);
 // get project by id
 router.get("/:id", getProject);
 // get project by project name

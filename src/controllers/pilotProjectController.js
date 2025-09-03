@@ -8,7 +8,7 @@ import env from "../../config/env.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const public_project_folder = path.join(
+const public_project_folder = path.resolve(
   __dirname,
   "..",
   env.UPLOAD_PROJECTS_PATH
@@ -42,8 +42,6 @@ const createPilotProject = asyncHandler(async (req, res) => {
   // remove zip file after extract
   fs.rmSync(req.file.path);
 
-  // save project in db
-
   return res.status(200).send({ message: "file uploaded and extracted" });
 });
 
@@ -66,7 +64,7 @@ const getPilotProjects = asyncHandler(async (req, res) => {
 });
 /**
  * @desc get pilot project by name
- * @route /api/pilot_project
+ * @route /api/pilot_project/:name
  * @method GET
  * @access private only admin
  */
@@ -94,7 +92,7 @@ const deletePilotProject = asyncHandler(async (req, res) => {
     const projectPath = path.join(pilot_project_path, name);
 
     if (!fs.existsSync(projectPath)) {
-      return res.status(404).send("Project no found");
+      return res.status(404).send("Project not found");
     }
 
     fs.rmSync(projectPath, { recursive: true, force: true });
