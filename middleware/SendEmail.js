@@ -50,7 +50,6 @@ function SendEmail(req, res, next) {
       emailType: "uploadProjectFiles",
       to: req?.ToEmail,
       ar_temp: false,
-      cc: [req?.CcEmails && req?.CcEmails],
       emailFile: "uploadProjectFiles",
       subject: `Virtual Tour Ready for ${req?.projectName}`,
       replacement: {
@@ -132,8 +131,8 @@ function SendEmail(req, res, next) {
   const { to, subject, replacement, emailFile, cc, ar_temp } = emailOption;
 
   const templatePath = ar_temp
-    ? `${emailFile}/${lang === "en" ? "/email" : "/email_ar"}`
-    : `${emailFile}/${"/email"}`;
+    ? `${emailFile}${lang === "en" ? "/email" : "/email_ar"}`
+    : `${emailFile}${"/email"}`;
 
   const mailOptions = {
     from: `"Magnifyportal" <${env.SMTP_USER}>`,
@@ -141,19 +140,7 @@ function SendEmail(req, res, next) {
     subject: subject,
     template: templatePath,
     context: replacement,
-    cc: cc && cc,
-    attachments: [
-      {
-        filename: "mainLogo.png",
-        path: "emails/assets/mainLogo.png",
-        cid: "logo@cid",
-      },
-      {
-        filename: "icon.png",
-        path: "emails/assets/icon.png",
-        cid: "icon@cid",
-      },
-    ],
+    cc: req?.CcEmails?.length ? req.CcEmails : undefined,
   };
 
   // send email
